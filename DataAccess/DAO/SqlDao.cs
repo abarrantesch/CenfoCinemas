@@ -60,7 +60,7 @@ namespace DataAccess.DAO
         public List<Dictionary<string, object>> ExecuteQueryProcedure(SqlOperation sqlOperation) 
         {
             
-            var List= new List<Dictionary<string, object>>();
+            var lstResults= new List<Dictionary<string, object>>();
 
             using (var conn = new SqlConnection(_connectionString))
 
@@ -103,7 +103,7 @@ namespace DataAccess.DAO
                 }
             }
 
-            return List;
+            return lstResults;
         }
 
 
