@@ -8,7 +8,7 @@ CREATE PROCEDURE CRE_MOVIE_PR
 
 AS
 BEGIN
-	INSERT INTO TBL_Movie(Created, Updated, Title, Description, ReleaseDate, Genre, Director)
-	VALUES (GETDATE(),GETDATE(),@P_Title,@P_Description, @P_ReleaseDate, @P_Genre, @P_Director);
+	INSERT INTO TBL_Movie(Created, Title, Description, ReleaseDate, Genre, Director)
+	VALUES (GETDATE(),@P_Title,@P_Description, @P_ReleaseDate, @P_Genre, @P_Director);
 END
 GO

@@ -24,7 +24,7 @@ namespace DataAccess.DAO
             _connectionString = @"Data Source=srv-sqldatabase-abarrantesc.database.windows.net;Initial Catalog=cenfocinemas-db;Persist Security Info=True;User ID=sysman;Password=Cenfotec123!;Trust Server Certificate=True";
         }
 
-        public static SqlDao getInstance()
+        public static SqlDao GetInstance()
         {
             if (_instance == null)
             {
@@ -50,7 +50,7 @@ namespace DataAccess.DAO
                     }
                     //Ejectura el SP
                     conn.Open();
-                    command.ExecuteNonQuery();
+                    //command.ExecuteNonQuery();
                 }
 
             }
