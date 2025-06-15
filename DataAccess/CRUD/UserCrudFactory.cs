@@ -16,6 +16,7 @@ namespace DataAccess.CRUD
         {
             _sqlDao = SqlDao.GetInstance();
         }
+
         public override void Create(BaseDTO baseDTO)
         {
             var user = baseDTO as User;

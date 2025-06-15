@@ -1,7 +1,9 @@
 ﻿using DataAccess.CRUD;
 using DataAccess.DAO;
 using DTOs;
+using Microsoft.Web.Services3.Security.Utility;
 using Newtonsoft.Json;
+using System.Data.Common;
 
 public class Program
 {
@@ -11,12 +13,14 @@ public class Program
         Console.WriteLine("Seleccione la opcion deseada:");
         Console.WriteLine("1. Crear Usuario");
         Console.WriteLine("2. Consultar Usuarios");
-        Console.WriteLine("3. Actualizar Usuarios");
-        Console.WriteLine("4. Eliminar Usuarios");
-        Console.WriteLine("5. Crear Pelicula");
-        Console.WriteLine("6. Consultar Peliculas");
-        Console.WriteLine("7. Actualizar Peliculas");
-        Console.WriteLine("8. Peliculas");
+        Console.WriteLine("3. Consultar Usuario por ID");
+        Console.WriteLine("4. Actualizar Usuarios");
+        Console.WriteLine("5. Eliminar Usuarios");
+        Console.WriteLine("6. Crear Pelicula");
+        Console.WriteLine("7. Consultar Peliculas");
+        Console.WriteLine("8. Consultar Pelicula por ID");
+        Console.WriteLine("9. Actualizar Peliculas");
+        Console.WriteLine("10. Peliculas");
 
         var option=int.Parse(Console.ReadLine());
         var sqlOperation = new SqlOperation();
@@ -24,7 +28,7 @@ public class Program
         //switch de menu
         switch (option)
         {
-            case 1: //USUARIO
+            case 1: // CREAR USUARIO
                 Console.WriteLine("Digite el Codigo de Usuario");
                 var userCode=Console.ReadLine();
 
@@ -55,11 +59,8 @@ public class Program
 
                 var uCrud = new UserCrudFactory();
                 uCrud.Create(user);
-
-
-
-
                 break;
+
             case 2: //CONSULTAR USUARIOS
                 var uCrud2=new UserCrudFactory();
                 var listUsers = uCrud2.RetrieveAll<User>();
@@ -68,8 +69,16 @@ public class Program
                     Console.WriteLine(JsonConvert.SerializeObject(u));
                 }
                 break;
-
-            case 5:
+            case 3: //Consultar Usuario por ID
+                Console.WriteLine("Falta por implementar la actualizacion de usuarios");
+                break;
+            case 4: //Actualizar Usuarios
+                Console.WriteLine("Falta por implementar la eliminacion de usuarios");
+                break;
+            case 5: //Eliminar Usuarios
+                Console.WriteLine("Falta por implementar la eliminacion de usuarios");
+                break;
+            case 6: //Crear Pelicula
                 Console.WriteLine("");
                 Console.WriteLine("Digite el nombre de la pelicula");
                 var title = Console.ReadLine();
@@ -79,25 +88,45 @@ public class Program
 
                 Console.WriteLine("Digite la fecha de lanzamiento");
                 var releasedate = DateTime.Parse(Console.ReadLine());
+                //CREAR VALIDACION PARA DATETIME?
 
                 Console.WriteLine("Digite el genero de la pelicula");
                 var genre = Console.ReadLine();
 
                 Console.WriteLine("Digite el nombre del director:");
                 var director = Console.ReadLine();
+                break;
+            case 7: //CONSULTAR PELICULAS
+                var mCrud2 = new MovieCrudFactory();
+                var listMovies = mCrud2.RetrieveAll<Movie>();
+                foreach (var m in listMovies)
+                {
+                    Console.WriteLine(JsonConvert.SerializeObject(m));
+                }
+                break;
+            case 8: //Consultar Pelicula por ID
+                Console.WriteLine("Falta por implementar la consulta de peliculas por ID");
+                break;
+            case 9: //Actualizar Peliculas
+                Console.WriteLine("Falta por implementar la actualizacion de peliculas");
+                break;
+            case 10: //Eliminar Peliculas
+                Console.WriteLine("Falta por implementar la eliminacion de peliculas");
+                break;
 
 
+                //CREAR OBJETO Pelicula A PARTIR DE LOS VALORES CAPTURADOS EN CONSOLA
+                var movie = new Movie()
+                {
+                    Title = title,
+                    Description = description,
+                    ReleaseDate = releasedate,
+                    Genre = genre,
+                    Director = director
+                };
 
-                sqlOperation.AddStringParameter("P_Title", title);
-                sqlOperation.AddStringParameter("P_Description", description);
-                sqlOperation.AddDateTimeParam("P_ReleaseDate", releasedate);
-                sqlOperation.AddStringParameter("P_Genre", genre);
-                sqlOperation.AddStringParameter("P_Director", director);
-
-
-                sqlOperation.ProcedureName = "CRE_MOVIE_PR";
-
-                Console.WriteLine("");
+                var mCrud = new MovieCrudFactory();
+                mCrud.Create(movie);
                 break;
         }
 
