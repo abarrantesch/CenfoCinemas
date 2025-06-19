@@ -61,9 +61,19 @@ namespace DataAccess.CRUD
         }
 
 
-        public override T RetrieveById<T>()
+        public override T RetrieveById<T>(BaseDTO baseDTO)
         {
-            throw new NotImplementedException();
+            var movie = baseDTO as Movie;
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_MOVIE_ID" };
+            sqlOperation.AddIntParam("MovieId", movie.Id);
+
+            var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (result.Count > 0)
+            {
+                var row = result[0];
+                return (T)Convert.ChangeType(BuildMovie(row), typeof(T));
+            }
+            return default(T);
         }
 
         public override void Update(BaseDTO baseDTO)

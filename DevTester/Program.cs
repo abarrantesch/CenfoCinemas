@@ -20,7 +20,7 @@ public class Program
         Console.WriteLine("7. Consultar Peliculas");
         Console.WriteLine("8. Consultar Pelicula por ID");
         Console.WriteLine("9. Actualizar Peliculas");
-        Console.WriteLine("10. Peliculas");
+        Console.WriteLine("10. Eliminar Peliculas");
 
         var option=int.Parse(Console.ReadLine());
         var sqlOperation = new SqlOperation();
@@ -69,9 +69,25 @@ public class Program
                     Console.WriteLine(JsonConvert.SerializeObject(u));
                 }
                 break;
+
             case 3: //Consultar Usuario por ID
-                Console.WriteLine("Falta por implementar la actualizacion de usuarios");
+                
+                Console.WriteLine("Digite el ID del usuario a consultar");
+                var Userid = int.Parse(Console.ReadLine());
+
+                var uCrud3 = new UserCrudFactory();
+                var userById = uCrud3.RetrieveById<User>(new User() { Id = Userid });
+
+                if (userById != null)
+                {
+                    Console.WriteLine(JsonConvert.SerializeObject(userById));
+                }
+                else
+                {
+                    Console.WriteLine("Usuario no encontrado");
+                }
                 break;
+
             case 4: //Actualizar Usuarios
                 Console.WriteLine("Falta por implementar la eliminacion de usuarios");
                 break;
@@ -105,8 +121,23 @@ public class Program
                 }
                 break;
             case 8: //Consultar Pelicula por ID
-                Console.WriteLine("Falta por implementar la consulta de peliculas por ID");
+
+                Console.WriteLine("Digite el ID de la pelicula a consultar");
+                var MovieId = int.Parse(Console.ReadLine());
+
+                var mCrud3 = new MovieCrudFactory();
+                var movieById = mCrud3.RetrieveById<Movie>(new Movie() { Id = MovieId });
+
+                if (movieById != null)
+                {
+                    Console.WriteLine(JsonConvert.SerializeObject(movieById));
+                }
+                else
+                {
+                    Console.WriteLine("Pelioula no encontrada");
+                }
                 break;
+
             case 9: //Actualizar Peliculas
                 Console.WriteLine("Falta por implementar la actualizacion de peliculas");
                 break;

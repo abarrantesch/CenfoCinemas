@@ -23,7 +23,7 @@ namespace DataAccess.CRUD
 
         public abstract T Retrieve<T>();
 
-        public abstract T RetrieveById<T>();
+        public abstract T RetrieveById<T>(BaseDTO baseDTO);
 
         public abstract List<T> RetrieveAll<T>();
 
