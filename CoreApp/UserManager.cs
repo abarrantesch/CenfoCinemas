@@ -28,17 +28,29 @@ namespace CoreApp
                     var uCrud = new UserCrudFactory();
 
                     //comprobar si el usuario ya existe EN DB
-                    var uExist = uCrud.RetrieveByUserCode(user); //VER CLASE Y ARREGLAR
+                    var uExist = uCrud.RetrieveByUserCode<User>(user); //VER CLASE Y ARREGLAR
                     if (uExist == null)
                     {
-                        uCrud.Create(user);
+
+                        //comprobar si el email ya existe EN DB
+                        uExist = uCrud.RetrieveByEmail<User>(user);
+
+                        if (uExist == null)
+                        {
+                            uCrud.Create(user);
+                            //Ahora sigue el envio de reo de confirmacion
+                        }
+                        else
+                        {
+                            throw new Exception("Este correo electronico ya se encuentra registrado");
+                        }
                     }
                     else
                     {
                         throw new Exception("El codigo de usuario no esta disponible");
                     }
 
-                        uCrud.Create(user);
+                        //uCrud.Create(user);
                 }
                 else
                 {

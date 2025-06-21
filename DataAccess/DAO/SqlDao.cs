@@ -50,7 +50,7 @@ namespace DataAccess.DAO
                     }
                     //Ejectura el SP
                     conn.Open();
-                    //command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
                 }
 
             }

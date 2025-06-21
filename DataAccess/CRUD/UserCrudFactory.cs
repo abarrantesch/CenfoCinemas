@@ -68,7 +68,43 @@ namespace DataAccess.CRUD
                 var row = result[0];
                 return (T)Convert.ChangeType(BuildUser(row), typeof(T));
             }
-            return default(T);
+            return default(T); //Si no hay resultados, retorna el valor por defecto del tipo T
+
+        }
+
+        public T RetrieveByUserCode<T>(User user)
+        {
+
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_USER_BY_CODE_PR" };
+            sqlOperation.AddStringParameter("P_CODE", user.UserCode);
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if(lstResults.Count > 0)
+            {
+                var row= lstResults[0];
+                user= BuildUser(row);
+
+                return (T)Convert.ChangeType(user, typeof(T));
+            }
+            return default(T); //Si no hay resultados, retorna el valor por defecto del tipo T
+
+        }
+
+        public T RetrieveByEmail<T>(User user)
+        {
+
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_USER_BY_EMAIL_PR" };
+            sqlOperation.AddStringParameter("P_EMAIL", user.Email);
+            var lstResults = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResults.Count > 0)
+            {
+                var row = lstResults[0];
+                user = BuildUser(row);
+
+                return (T)Convert.ChangeType(user, typeof(T));
+            }
+            return default(T); //Si no hay resultados, retorna el valor por defecto del tipo T
 
         }
 

@@ -10,6 +10,7 @@ namespace CoreApp
     {
         protected void ManageException(Exception exception)
         {
+            throw exception; // Aquí se lanza la excepción para que sea manejada por el llamador
             //TO DO>Implementacion de manejo de excepciones pendiente
         }
     }

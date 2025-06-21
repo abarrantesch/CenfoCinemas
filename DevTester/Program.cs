@@ -1,6 +1,8 @@
-﻿using DataAccess.CRUD;
+﻿using CoreApp;
+using DataAccess.CRUD;
 using DataAccess.DAO;
 using DTOs;
+using Microsoft.Web.Services3.Security.Tokens;
 using Microsoft.Web.Services3.Security.Utility;
 using Newtonsoft.Json;
 using System.Data.Common;
@@ -57,18 +59,20 @@ public class Program
                     BirthDate = bdate,
                 };
 
-                var uCrud = new UserCrudFactory();
-                uCrud.Create(user);
+                var um = new UserManager();
+                um.Create(user);
+                Console.WriteLine("Usuario creado exitosamente");
+
                 break;
 
             case 2: //CONSULTAR USUARIOS
-                var uCrud2=new UserCrudFactory();
-                var listUsers = uCrud2.RetrieveAll<User>();
-                foreach(var u in listUsers)
-                {
-                    Console.WriteLine(JsonConvert.SerializeObject(u));
-                }
-                break;
+                //var uCrud2=new UserCrudFactory();
+                //var listUsers = uCrud2.RetrieveAll<User>();
+                //foreach(var u in listUsers)
+                //{
+                   // Console.WriteLine(JsonConvert.SerializeObject(u));
+               // }
+                //break;
 
             case 3: //Consultar Usuario por ID
                 
@@ -164,8 +168,8 @@ public class Program
 
 
 
-        var sqlDao= SqlDao.GetInstance();
-        sqlDao.ExecuteProcedure(sqlOperation);
+        //var sqlDao= SqlDao.GetInstance();
+        //sqlDao.ExecuteProcedure(sqlOperation);
 
     }
 }
