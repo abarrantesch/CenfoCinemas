@@ -1,11 +1,13 @@
-﻿using DTOs;
+﻿using DataAccess.CRUD;
+using DTOs;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+
 
 namespace CoreApp
 {
@@ -55,6 +57,60 @@ namespace CoreApp
             
 
 
+        }
+
+        public List <Movie> RetrieveAll()
+        {
+            var mCrud = new DataAccess.CRUD.MovieCrudFactory();
+            return mCrud.RetrieveAll<Movie>();
+        }
+
+        public Movie RetrieveById(Movie movie)
+        {
+            var mCrud = new MovieCrudFactory();
+            return mCrud.RetrieveById<Movie>(movie);
+        }
+
+        public void Update(Movie movie)
+        {
+            try
+            {
+                var mCrud = new MovieCrudFactory();
+                var mExist = mCrud.RetrieveById<Movie>(movie);
+                if (mExist != null)
+                {
+                    mCrud.Update(movie);
+                }
+                else
+                {
+                    throw new Exception("No existe este ID en la pelicula");
+                }
+            }
+            catch (Exception ex)
+            {
+                ManageException(ex);
+            }
+        }
+
+        public void Delete(Movie movie)
+        {
+            try
+            {
+                var mCrud = new MovieCrudFactory();
+                var mExist = mCrud.RetrieveById<Movie>(movie);
+                if (mExist != null)
+                {
+                    mCrud.Delete(movie);
+                }
+                else
+                {
+                    throw new Exception("No existe este ID en la pelicula");
+                }
+            }
+            catch (Exception ex)
+            {
+                ManageException(ex);
+            }
         }
 
 

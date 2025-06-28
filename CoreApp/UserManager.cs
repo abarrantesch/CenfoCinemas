@@ -75,6 +75,76 @@ namespace CoreApp
             return uCrud.RetrieveAll<User>();
         }
 
+        public User RetrieveById(User user)
+        {
+            var uCrud = new UserCrudFactory();
+            return uCrud.RetrieveById<User>(user);
+        }
+
+        public User RetrieveByUserCode(string userCode)
+        {
+            var uCrud = new UserCrudFactory();
+            var user = new User { UserCode = userCode };
+            return uCrud.RetrieveByUserCode<User>(user);
+
+        }
+
+        public User RetrieveByEmail(User user)
+        {
+            var uCrud = new UserCrudFactory();
+            return uCrud.RetrieveByEmail<User>(user);
+        }
+
+        public void Update(User user)
+        {
+            try
+            {
+                if (IsOver18(user))
+                {
+                    var uCrud = new UserCrudFactory();
+                    var uExist = uCrud.RetrieveById<User>(user);
+                    if (uExist != null)
+                    {
+                        uCrud.Update(user);
+                    }
+                    else
+                    {
+                        throw new Exception("Este ID no existe");
+                    }
+                }
+                else
+                {
+                    throw new Exception("El usuario debe ser mayor a 18");
+                }
+            }
+            catch (Exception ex)
+            {
+                ManageException(ex);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            try
+            {
+                var uCrud = new UserCrudFactory();
+                var user = new User { Id = id };
+                var uExist = uCrud.RetrieveById<User>(user);
+                if (uExist != null)
+                {
+                    uCrud.Delete(user);
+                }
+                else
+                {
+                    throw new Exception("Este Id no existe.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ManageException(ex);
+            }
+        }
+
         private bool IsOver18(User user)
         {
             var currentDate = DateTime.Now;

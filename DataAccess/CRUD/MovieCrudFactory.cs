@@ -33,7 +33,11 @@ namespace DataAccess.CRUD
 
         public override void Delete(BaseDTO baseDTO)
         {
-            throw new NotImplementedException();
+            var movie = baseDTO as Movie;
+            var sqlOperation = new SqlOperation() { ProcedureName = "DELETE_MOVIE_PR" };
+            sqlOperation.AddIntParam("P_Id", movie.Id);
+            _sqlDao.ExecuteProcedure(sqlOperation);
+
         }
 
         public override List<T> RetrieveAll<T>()
@@ -92,7 +96,17 @@ namespace DataAccess.CRUD
 
         public override void Update(BaseDTO baseDTO)
         {
-            throw new NotImplementedException();
+            var movie = baseDTO as Movie;
+            var sqlOperation = new SqlOperation() { ProcedureName = "UPDATE_MOVIE_PR" };
+
+            sqlOperation.AddIntParam("P_Id", movie.Id);
+            sqlOperation.AddStringParameter("P_Title", movie.Title);
+            sqlOperation.AddStringParameter("P_Description", movie.Description);
+            sqlOperation.AddDateTimeParam("P_ReleaseDate", movie.ReleaseDate);
+            sqlOperation.AddStringParameter("P_Genre", movie.Genre);
+            sqlOperation.AddStringParameter("P_Director", movie.Director);
+
+            _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
         //Metodo que convierte el ctcionario de resultados a un objeto User
