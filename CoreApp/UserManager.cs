@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+
 
 namespace CoreApp
 {
-    public class UserManager: BaseManager
+    public class UserManager : BaseManager
     {
         /*
          *  Metodo para la creacion de un usuario
@@ -38,7 +41,10 @@ namespace CoreApp
                         if (uExist == null)
                         {
                             uCrud.Create(user);
-                            //Ahora sigue el envio de reo de confirmacion
+                            //Ahora sigue el envio de corrreo de confirmacion
+                            SendWelcomeEmail(user.Email, user.Name).GetAwaiter().GetResult(); //Llamada al metodo asincrono para enviar el correo
+
+
                         }
                         else
                         {
@@ -50,7 +56,7 @@ namespace CoreApp
                         throw new Exception("El codigo de usuario no esta disponible");
                     }
 
-                        //uCrud.Create(user);
+                    //uCrud.Create(user);
                 }
                 else
                 {
@@ -61,6 +67,12 @@ namespace CoreApp
             {
                 ManageException(ex);
             }
+        }
+
+        public List<User> RetrieveAll()
+        {
+            var uCrud = new UserCrudFactory();
+            return uCrud.RetrieveAll<User>();
         }
 
         private bool IsOver18(User user)
@@ -75,5 +87,25 @@ namespace CoreApp
             return age >= 18;
         }
 
-    }
+        //Enviar un correo de bienvenida al usuario
+        private async Task SendWelcomeEmail(string recipientEmail, string recipientName)
+        {
+            var apiKey = Environment.GetEnvironmentVariable("SendGridKey");
+
+            var client = new SendGridClient(apiKey);
+
+            var from = new EmailAddress("abarrantesc@ucenfotec.ac.cr", "CenfoCinemas");
+            var subject = "Bienvenido a CenfoCinemas";
+
+            var to = new EmailAddress(recipientEmail, recipientName);
+
+            var plainTextContent = $"Hola {recipientName}, gracias por registrarte.";
+            var htmlContent = $"<strong>Hola {recipientName}, gracias por registrarte.</strong>";
+
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+
+            var response = await client.SendEmailAsync(msg);
+
+        }
+        }
 }

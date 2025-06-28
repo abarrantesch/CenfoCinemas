@@ -20,7 +20,7 @@ public class Program
         Console.WriteLine("5. Eliminar Usuarios");
         Console.WriteLine("6. Crear Pelicula");
         Console.WriteLine("7. Consultar Peliculas");
-        Console.WriteLine("8. Consultar Pelicula por ID");
+        Console.WriteLine("8. Consultar Pelicula por Titulo");
         Console.WriteLine("9. Actualizar Peliculas");
         Console.WriteLine("10. Eliminar Peliculas");
 
@@ -99,22 +99,47 @@ public class Program
                 Console.WriteLine("Falta por implementar la eliminacion de usuarios");
                 break;
             case 6: //Crear Pelicula
-                Console.WriteLine("");
-                Console.WriteLine("Digite el nombre de la pelicula");
+                Console.WriteLine("Digite el nombre de la película:");
                 var title = Console.ReadLine();
 
-                Console.WriteLine("Digite la descripcion de la pelicula");
+                Console.WriteLine("Digite la descripción de la película:");
                 var description = Console.ReadLine();
 
-                Console.WriteLine("Digite la fecha de lanzamiento");
-                var releasedate = DateTime.Parse(Console.ReadLine());
-                //CREAR VALIDACION PARA DATETIME?
+                Console.WriteLine("Digite la fecha de lanzamiento (yyyy-MM-dd):");
+                if (!DateTime.TryParse(Console.ReadLine(), out var releasedate))
+                {
+                    Console.WriteLine("La fecha ingresada no es válida.");
+                    break;
+                }
 
-                Console.WriteLine("Digite el genero de la pelicula");
+                Console.WriteLine("Digite el género de la película:");
                 var genre = Console.ReadLine();
 
                 Console.WriteLine("Digite el nombre del director:");
                 var director = Console.ReadLine();
+
+                // Crear el objeto película
+                var movie = new Movie()
+                {
+                    Title = title,
+                    Description = description,
+                    ReleaseDate = releasedate,
+                    Genre = genre,
+                    Director = director
+                };
+
+                // Usar MovieManager para crearla (aquí está toda la validación)
+                try
+                {
+                    var mm = new MovieManager();
+                    mm.Create(movie);
+                    Console.WriteLine("Película creada exitosamente.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+
                 break;
             case 7: //CONSULTAR PELICULAS
                 var mCrud2 = new MovieCrudFactory();
@@ -124,21 +149,18 @@ public class Program
                     Console.WriteLine(JsonConvert.SerializeObject(m));
                 }
                 break;
-            case 8: //Consultar Pelicula por ID
-
-                Console.WriteLine("Digite el ID de la pelicula a consultar");
-                var MovieId = int.Parse(Console.ReadLine());
-
+            case 8: //Consultar Pelicula por Titulo
+                Console.WriteLine("Digite el titulo de la pelicula a consultar");
+                var movieTitle = Console.ReadLine();
                 var mCrud3 = new MovieCrudFactory();
-                var movieById = mCrud3.RetrieveById<Movie>(new Movie() { Id = MovieId });
-
-                if (movieById != null)
+                var movieByTitle = mCrud3.RetrieveByTitle<Movie>(new Movie() { Title = movieTitle });
+                if (movieByTitle != null)
                 {
-                    Console.WriteLine(JsonConvert.SerializeObject(movieById));
+                    Console.WriteLine(JsonConvert.SerializeObject(movieByTitle));
                 }
                 else
                 {
-                    Console.WriteLine("Pelioula no encontrada");
+                    Console.WriteLine("Pelicula no encontrada");
                 }
                 break;
 
@@ -151,14 +173,14 @@ public class Program
 
 
                 //CREAR OBJETO Pelicula A PARTIR DE LOS VALORES CAPTURADOS EN CONSOLA
-                var movie = new Movie()
-                {
-                    Title = title,
-                    Description = description,
-                    ReleaseDate = releasedate,
-                    Genre = genre,
-                    Director = director
-                };
+                //var movie = new Movie()
+                //{
+                   // Title = title,
+                   // Description = description,
+                   // ReleaseDate = releasedate,
+                   // Genre = genre,
+                   // Director = director
+              //  };
 
                 var mCrud = new MovieCrudFactory();
                 mCrud.Create(movie);

@@ -76,6 +76,20 @@ namespace DataAccess.CRUD
             return default(T);
         }
 
+        public T RetrieveByTitle<T>(BaseDTO baseDTO)
+        {
+            var movie = baseDTO as Movie;
+            var sqlOperation = new SqlOperation() { ProcedureName = "RET_MOVIE_BY_TITLE_PR" };
+            sqlOperation.AddStringParameter("P_Title", movie.Title);
+            var result = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+            if (result.Count > 0)
+            {
+                var row = result[0];
+                return (T)Convert.ChangeType(BuildMovie(row), typeof(T));
+            }
+            return default(T);
+        }
+
         public override void Update(BaseDTO baseDTO)
         {
             throw new NotImplementedException();
