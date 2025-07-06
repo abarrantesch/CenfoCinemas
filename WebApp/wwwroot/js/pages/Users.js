@@ -10,63 +10,168 @@ function UsersViewController() {
     this.InitView = function () {
 
         console.log("User init view --> ok");
+        this.LoadTable();
+
+        //asociar el evento al boton
+        $('#btnCreate').click(function () {
+            var vc = new UsersViewController();
+            vc.Create();
+        });
+        $('#btnUpdate').click(function () {
+            var vc = new UsersViewController();
+            vc.Update();
+        });
+        $('#btnDelete').click(function () {
+            var vc = new UsersViewController();
+            vc.Delete();
+        });
     }
 
 
     //metodo para la carga de una table
-    this.loadTable = function () {
+    this.LoadTable = function () {
         //URL del API a invocar
         //https://localhost:7182/api/User/RetrieveAll
 
         var ca = new ControlActions();
         var service = this.ApiEndPointName + "/RetrieveAll";
 
+
         var urlService = ca.GetUrlApiService(service);
 
-        /* PARA REFERENCIA DE ESTRUCTURA
-          {
-            "userCode": "abarrantes",
-            "name": "angel b",
-            "email": "angeljosue07@gmail.com",
-            "password": "pass12",
-            "birthDate": "1998-10-10T00:00:00",
-            "status": "AC",
-            "id": 15,
-            "created": "2025-06-28T04:29:37.347",
-            "updated": "0001-01-01T00:00:00"
-          }
-          
-                     <tr>
-                        <th>Id</th>
-                        <th>User Code</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Birthdate</th>
-                        <th>Status</th>
-                    </tr>
-        */
+        console.log("🟢 Invocando DataTables con URL:", urlService); //debug
 
         var columns = [];
-        colums[0] = { 'data': 'id' }
-        colums[1] = { 'data': 'userCode' }
-        colums[2] = { 'data': 'name' }
-        colums[3] = { 'data': 'email' }
-        colums[4] = { 'data': 'birthDate' }
-        colums[5] = { 'data': 'status' }
+        columns[0] = { 'data': 'id' }
+        columns[1] = { 'data': 'userCode' }
+        columns[2] = { 'data': 'name' }
+        columns[3] = { 'data': 'email' }
+        columns[4] = { 'data': 'birthDate' }
+        columns[5] = { 'data': 'status' }
 
         //Invocamos a datatables para convertir la tabla simple HTML en una tabla mas robusta
-        $("#tblUsers").dataTables({
+        $("#tblUsers").DataTable({
             "ajax": {
                 url: urlService,
                 "dataSrc": ""
             },
-            coluns: columns
+            columns: columns
         });
 
+        //aseignar eventos de carga de datos o bindings segun el click en la tabla
+        $('#tblUsers tbody').on('click', 'tr', function () {
+            //extraemos la fila 
+            var row = $(this).closest('tr');
+
+            //extraemos el dto
+            //Esto nos devuelve json de la fila seleccionada por el usuario segun la data devuelta por el API
+            var userDTO = $('#tblUsers').DataTable().row(row).data();
+
+            //binding con el form
+            $('#txtId').val(userDTO.id);
+            $('#txtUserCode').val(userDTO.userCode);
+            $('#txtName').val(userDTO.name);
+            $('#txtEmail').val(userDTO.email);
+            $('#txtStatus').val(userDTO.status);
+
+            //fecha tiene un formato
+            var onlyDate = userDTO.birthDate.split("T");
+            $('#txtBirthDate').val(onlyDate[0]);
+
+        })
+
     }
+
+
+
+    this.Create = function () {
+
+        var userDTO = {};
+        //atributos con valores defaul, que son controlados por el API
+
+        userDTO.id = 0;
+        userDTO.created = "2025-01-01";
+        userDTO.updated = "2025-01-01";
+
+        //valores capturados en pantalla
+        userDTO.userCode = $('#txtUserCode').val();
+        userDTO.name = $('#txtName').val();
+        userDTO.email = $('#txtEmail').val();
+        userDTO.status = $('#txtStatus').val(); 
+        userDTO.birthDate = $('#txtBirthDate').val();
+        userDTO.password = $('#txtPassword').val();
+
+        //enviar la data al API
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/Create";
+
+        ca.PostToAPI(urlService, userDTO, function () {
+            //recargar la tabla
+            $('#tblUsers').DataTable().ajax.reload();
+        })
+    }
+
+    this.Update = function(){
+
+        var userDTO = {};
+        //atributos con valores defaul, que son controlados por el API
+
+        userDTO.id = $('#txtId').val();
+        userDTO.created = "2025-01-01";
+        userDTO.updated = "2025-01-01";
+
+        //valores capturados en pantalla
+        userDTO.userCode = $('#txtUserCode').val();
+        userDTO.name = $('#txtName').val();
+        userDTO.email = $('#txtEmail').val();
+        userDTO.status = $('#txtStatus').val();
+        userDTO.birthDate = $('#txtBirthDate').val();
+        userDTO.password = $('#txtPassword').val();
+
+        //enviar la data al API
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/Update";
+
+        ca.PutToAPI(urlService, userDTO, function () {
+            //recargar la tabla
+            $('#tblUsers').DataTable().ajax.reload();
+        })
+
+    }
+
+    this.Delete = function(){
+
+        var userDTO = {};
+        //atributos con valores defaul, que son controlados por el API
+
+        userDTO.id = $('#txtId').val();
+        userDTO.created = "2025-01-01";
+        userDTO.updated = "2025-01-01";
+
+        //valores capturados en pantalla
+        userDTO.userCode = $('#txtUserCode').val();
+        userDTO.name = $('#txtName').val();
+        userDTO.email = $('#txtEmail').val();
+        userDTO.status = $('#txtStatus').val();
+        userDTO.birthDate = $('#txtBirthDate').val();
+        userDTO.password = $('#txtPassword').val();
+
+        //enviar la data al API
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/Delete";
+
+        //ca.PutToAPI(urlService, userDTO, function () {
+        //    //recargar la tabla
+        //    $('#tblUsers').DataTable().ajax.reload();
+        //})
+
+    }
+
 }
 
+console.log("users.js cargado y ejecutándose");
 $(document).ready(function () {
+    console.log("Documento listo, creando UsersViewController");
     var vc = new UsersViewController();
     vc.InitView();
-})
+});
