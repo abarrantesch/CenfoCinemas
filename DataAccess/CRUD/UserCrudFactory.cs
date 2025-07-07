@@ -138,7 +138,7 @@ namespace DataAccess.CRUD
             {
                 Id = (int)row["Id"],
                 Created = (DateTime)row["Created"],
-                //Updated = (DateTime)row["Updated"],
+               //Updated = (DateTime)row["Updated"],
                 UserCode = (string)row["UserCode"],
                 Name = (string)row["Name"],
                 Email = (string)row["Email"],

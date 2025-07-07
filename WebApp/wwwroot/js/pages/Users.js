@@ -111,7 +111,18 @@ function UsersViewController() {
         })
     }
 
-    this.Update = function(){
+    this.Update = function () {
+
+        var id = $('#txtId').val();
+        if (!id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Por favor, selecciona un usuario de la tabla antes de actualizar.',
+                confirmButtonText: 'Entendido'
+            });
+            return; // sale de la función, no sigue
+
 
         var userDTO = {};
         //atributos con valores defaul, que son controlados por el API
