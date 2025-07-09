@@ -121,7 +121,10 @@ namespace DataAccess.CRUD
         {
            var user = baseDTO as User;
             var sqlOperation = new SqlOperation() { ProcedureName = "UPDATE_USER_PR" };
+
             sqlOperation.AddIntParam("P_Id", user.Id);
+            sqlOperation.AddDateTimeParam("P_Created", user.Created); //agregado
+            sqlOperation.AddDateTimeParam("P_Updated", DateTime.Now); // se setea en backend
             sqlOperation.AddStringParameter("P_UserCode", user.UserCode);
             sqlOperation.AddStringParameter("P_Name", user.Name);
             sqlOperation.AddStringParameter("P_Email", user.Email);

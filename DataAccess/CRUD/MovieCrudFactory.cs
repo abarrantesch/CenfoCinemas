@@ -100,6 +100,7 @@ namespace DataAccess.CRUD
             var sqlOperation = new SqlOperation() { ProcedureName = "UPDATE_MOVIE_PR" };
 
             sqlOperation.AddIntParam("P_Id", movie.Id);
+            sqlOperation.AddDateTimeParam("P_Updated", DateTime.Now); // se setea en backend
             sqlOperation.AddStringParameter("P_Title", movie.Title);
             sqlOperation.AddStringParameter("P_Description", movie.Description);
             sqlOperation.AddDateTimeParam("P_ReleaseDate", movie.ReleaseDate);

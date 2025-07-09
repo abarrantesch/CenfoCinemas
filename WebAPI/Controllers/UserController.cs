@@ -148,12 +148,7 @@ namespace WebAPI.Controllers
             try
             {
                 var um = new UserManager();
-                var user = new User { Id = Id };
-                var existingUser = um.RetrieveById(user);
-                if (existingUser == null)
-                {
-                    return NotFound("No se encontro el usuario a eliminar");
-                }
+                um.Delete(Id);
                 return Ok($"Usuario con ID {Id} eliminado.");
             }
             catch (Exception ex)

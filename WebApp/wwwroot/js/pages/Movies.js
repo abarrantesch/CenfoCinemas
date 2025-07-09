@@ -1,28 +1,28 @@
 ﻿//js que maneja todo el comportamiento de la vista de usuarios
 //definir una clase js usando prototype
 
-function UsersViewController() {
+function MoviesViewController() {
 
-    this.ViewName = "Users";
-    this.ApiEndPointName = "User";
+    this.ViewName = "Movies";
+    this.ApiEndPointName = "Movie";
 
     //Metodo Constructor
     this.InitView = function () {
 
-        console.log("User init view --> ok");
+        console.log("Movie init view --> ok");
         this.LoadTable();
 
         //asociar el evento al boton
         $('#btnCreate').click(function () {
-            var vc = new UsersViewController();
+            var vc = new MoviesViewController();
             vc.Create();
         });
         $('#btnUpdate').click(function () {
-            var vc = new UsersViewController();
+            var vc = new MoviesViewController();
             vc.Update();
         });
         $('#btnDelete').click(function () {
-            var vc = new UsersViewController();
+            var vc = new MoviesViewController();
             vc.Delete();
         });
     }
@@ -31,7 +31,7 @@ function UsersViewController() {
     //metodo para la carga de una table
     this.LoadTable = function () {
         //URL del API a invocar
-        //https://localhost:7182/api/User/RetrieveAll
+        //https://localhost:7182/api/Movie/RetrieveAll
 
         var ca = new ControlActions();
         var service = this.ApiEndPointName + "/RetrieveAll";
@@ -43,14 +43,14 @@ function UsersViewController() {
 
         var columns = [];
         columns[0] = { 'data': 'id' }
-        columns[1] = { 'data': 'userCode' }
-        columns[2] = { 'data': 'name' }
-        columns[3] = { 'data': 'email' }
-        columns[4] = { 'data': 'birthDate' }
-        columns[5] = { 'data': 'status' }
+        columns[1] = { 'data': 'title' }
+        columns[2] = { 'data': 'description' }
+        columns[3] = { 'data': 'releaseDate' }
+        columns[4] = { 'data': 'genre' }
+        columns[5] = { 'data': 'director' }
 
         //Invocamos a datatables para convertir la tabla simple HTML en una tabla mas robusta
-        $("#tblUsers").DataTable({
+        $("#tblMovies").DataTable({
             "ajax": {
                 url: urlService,
                 "dataSrc": ""
@@ -59,24 +59,25 @@ function UsersViewController() {
         });
 
         //aseignar eventos de carga de datos o bindings segun el click en la tabla
-        $('#tblUsers tbody').on('click', 'tr', function () {
+        $('#tblMovies tbody').on('click', 'tr', function () {
             //extraemos la fila 
             var row = $(this).closest('tr');
 
             //extraemos el dto
             //Esto nos devuelve json de la fila seleccionada por el usuario segun la data devuelta por el API
-            var userDTO = $('#tblUsers').DataTable().row(row).data();
+            var movieDTO = $('#tblMovies').DataTable().row(row).data();
 
             //binding con el form
-            $('#txtId').val(userDTO.id);
-            $('#txtUserCode').val(userDTO.userCode);
-            $('#txtName').val(userDTO.name);
-            $('#txtEmail').val(userDTO.email);
-            $('#txtStatus').val(userDTO.status);
+            $('#txtId').val(movieDTO.id);
+            $('#txtTitle').val(movieDTO.title);
+            $('#txtDescription').val(movieDTO.description);
+            $('#txtReleaseDate').val(movieDTO.releaseDate);
+            $('#txtGenre').val(movieDTO.genre);
+            $('#txtDirector').val(movieDTO.director);
 
             //fecha tiene un formato
-            var onlyDate = userDTO.birthDate.split("T");
-            $('#txtBirthDate').val(onlyDate[0]);
+            var onlyDate = movieDTO.releaseDate.split("T");
+            $('#txtReleaseDate').val(onlyDate[0]);
 
         })
 
@@ -86,28 +87,27 @@ function UsersViewController() {
 
     this.Create = function () {
 
-        var userDTO = {};
+        var movieDTO = {};
         //atributos con valores defaul, que son controlados por el API
 
-        userDTO.id = 0;
-        userDTO.created = "2025-01-01";
-        userDTO.updated = "2025-01-01";
+        movieDTO.id = 0;
+        movieDTO.created = "2025-01-01";
+        movieDTO.updated = "2025-01-01";
 
         //valores capturados en pantalla
-        userDTO.userCode = $('#txtUserCode').val();
-        userDTO.name = $('#txtName').val();
-        userDTO.email = $('#txtEmail').val();
-        userDTO.status = $('#txtStatus').val();
-        userDTO.birthDate = $('#txtBirthDate').val();
-        userDTO.password = $('#txtPassword').val();
+        movieDTO.title = $('#txtTitle').val();
+        movieDTO.description = $('#txtDescription').val();
+        movieDTO.ReleaseDate = $('#txtReleaseDate').val();
+        movieDTO.Genre = $('#txtGenre').val();
+        movieDTO.Director = $('#txtDirector').val();
 
         //enviar la data al API
         var ca = new ControlActions();
         var urlService = this.ApiEndPointName + "/Create";
 
-        ca.PostToAPI(urlService, userDTO, function () {
+        ca.PostToAPI(urlService, movieDTO, function () {
             //recargar la tabla
-            $('#tblUsers').DataTable().ajax.reload();
+            $('#tblMovies').DataTable().ajax.reload();
         })
     }
 
@@ -118,35 +118,34 @@ function UsersViewController() {
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Por favor, selecciona un usuario de la tabla antes de actualizar.',
+                text: 'Por favor, selecciona una pelicula de la tabla antes de actualizar.',
                 confirmButtonText: 'Entendido'
             });
             return;
         }// sale de la función, no sigue
 
 
-        var userDTO = {};
+        var movieDTO = {};
         //atributos con valores defaul, que son controlados por el API
 
-        userDTO.id = $('#txtId').val();
-        userDTO.created = "2025-01-01";
-        userDTO.updated = "2025-01-01";
+        movieDTO.id = id;
+        movieDTO.created = "2025-01-01";
+        movieDTO.updated = "2025-01-01";
 
         //valores capturados en pantalla
-        userDTO.userCode = $('#txtUserCode').val();
-        userDTO.name = $('#txtName').val();
-        userDTO.email = $('#txtEmail').val();
-        userDTO.status = $('#txtStatus').val();
-        userDTO.birthDate = $('#txtBirthDate').val();
-        userDTO.password = $('#txtPassword').val();
+        movieDTO.title = $('#txtTitle').val();
+        movieDTO.description = $('#txtDescription').val();
+        movieDTO.releaseDate = $('#txtReleaseDate').val();
+        movieDTO.genre = $('#txtGenre').val();
+        movieDTO.director = $('#txtDirector').val();
 
         //enviar la data al API
         var ca = new ControlActions();
         var urlService = this.ApiEndPointName + "/Update";
 
-        ca.PutToAPI(urlService, userDTO, function () {
+        ca.PutToAPI(urlService, movieDTO, function () {
             //recargar la tabla
-            $('#tblUsers').DataTable().ajax.reload();
+            $('#tblMovies').DataTable().ajax.reload();
         })
 
     }
@@ -159,7 +158,7 @@ function UsersViewController() {
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops...',
-                text: 'Por favor, selecciona un usuario antes de eliminar.',
+                text: 'Por favor, selecciona una pelicula antes de eliminar.',
                 confirmButtonText: 'Entendido'
             });
             return;
@@ -169,16 +168,16 @@ function UsersViewController() {
         var urlService = this.ApiEndPointName + "/Delete?id=" + id;
 
         ca.DeleteToAPI(urlService, null, function () {
-            $('#tblUsers').DataTable().ajax.reload();
+            $('#tblMovies').DataTable().ajax.reload();
             Swal.fire('Eliminado!', 'Usuario eliminado con éxito.', 'success');
         });
     }
 }
 
 
-console.log("users.js cargado y ejecutándose");
+console.log("movies.js cargado y ejecutándose");
 $(document).ready(function () {
-    console.log("Documento listo, creando UsersViewController");
-    var vc = new UsersViewController();
+    console.log("Documento listo, creando MoviesViewController");
+    var vc = new MoviesViewController();
     vc.InitView();
 });

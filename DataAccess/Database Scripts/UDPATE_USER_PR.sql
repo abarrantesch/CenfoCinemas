@@ -13,7 +13,6 @@ AS
 BEGIN
 	UPDATE TBL_User
 	SET
-        [Created] = @P_Created,
         [Updated] = @P_Updated,
         [UserCode] = @P_UserCode,
         [Name] = @P_Name,
