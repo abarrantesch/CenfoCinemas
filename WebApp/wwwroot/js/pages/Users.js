@@ -25,6 +25,10 @@ function UsersViewController() {
             var vc = new UsersViewController();
             vc.Delete();
         });
+        $('#btnSearch').click(function () {
+            var vc = new UsersViewController();
+            vc.IdSearch();
+        });
     }
 
 
@@ -171,6 +175,39 @@ function UsersViewController() {
         ca.DeleteToAPI(urlService, null, function () {
             $('#tblUsers').DataTable().ajax.reload();
             Swal.fire('Eliminado!', 'Usuario eliminado con éxito.', 'success');
+        });
+    }
+
+    this.IdSearch = function () {
+        var id = $('#UserIdSearch').val();
+        if (!id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'El formato de usuario no es valido, debe ser un numero',
+                confirmButtonText: 'Entendido'
+            });
+            return;
+        }
+
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/RetrieveById?id=" + id;
+
+        ca.GetToApi(urlService, function (response) {
+            if (response) {
+                // actualiza formulario con el resultado de busqueda
+                $('#txtId').val(response.id);
+                $('#txtUserCode').val(response.userCode);
+                $('#txtName').val(response.name);
+                $('#txtEmail').val(response.email);
+                $('#txtStatus').val(response.status);
+                var onlyDate = response.birthDate.split("T");
+                $('#txtBirthDate').val(onlyDate[0]);
+
+                Swal.fire('Encontrado!', 'Usuario recuperado con éxito.', 'success');
+            } else {
+                Swal.fire('No encontrado', 'No se encontró usuario con ese ID', 'warning');
+            }
         });
     }
 }

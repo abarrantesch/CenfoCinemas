@@ -25,6 +25,10 @@ function MoviesViewController() {
             var vc = new MoviesViewController();
             vc.Delete();
         });
+        $('#btnSearch').click(function () {
+            var vc = new MoviesViewController();
+            vc.IdSearch();
+        });
     }
 
 
@@ -170,6 +174,39 @@ function MoviesViewController() {
         ca.DeleteToAPI(urlService, null, function () {
             $('#tblMovies').DataTable().ajax.reload();
             Swal.fire('Eliminado!', 'Usuario eliminado con éxito.', 'success');
+        });
+    }
+
+    this.IdSearch = function () {
+        var id = $('#MovieIdSearch').val();
+        if (!id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'El formato de usuario no es valido, debe ser un numero',
+                confirmButtonText: 'Entendido'
+            });
+            return;
+        }
+
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/RetrieveById?id=" + id;
+
+        ca.GetToApi(urlService, function (response) {
+            if (response) {
+                // actualiza formulario con el resultado de busqueda
+                $('#txtId').val(response.id);
+                $('#txtTitle').val(response.title);
+                $('#txtDescription').val(response.description);
+                var onlyDate = response.releaseDate.split("T");
+                $('#txtReleaseDate').val(onlyDate[0]);
+                $('#txtGenre').val(response.genre);
+                $('#txtDirector').val(response.director);
+
+                Swal.fire('Encontrado!', 'Pelicula recuperada con éxito.', 'success');
+            } else {
+                Swal.fire('No encontrado', 'No se encontró pelicula con ese ID', 'warning');
+            }
         });
     }
 }

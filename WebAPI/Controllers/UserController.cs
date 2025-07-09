@@ -55,18 +55,19 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("RetrieveById")]
-        public ActionResult RetrieveById(User user)
+        public ActionResult RetrieveById(int id)
         {
             try
             {
                 var um = new UserManager();
+                var user = new User { Id = id };
                 var result = um.RetrieveById(user);
                 if (result == null)
                 {
                     return NotFound("No se encontro el usuario");
                 }
 
-                return Ok();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -110,7 +111,7 @@ namespace WebAPI.Controllers
                 {
                     return NotFound("No se encontro el usuario con ese codigo");
                 }
-                return Ok();
+                return Ok(result);
 
             }
             catch (Exception ex)

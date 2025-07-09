@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using CoreApp;
 using DTOs;
-using CoreApp;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
@@ -53,12 +54,13 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("RetrieveById")]
-        public ActionResult RetrieveById(Movie movie)
+        public ActionResult RetrieveById(int id)
         {
             try
             {
                 var mm = new MovieManager();
-                var result = mm.RetrieveById(movie);
+                var movie = new Movie { Id = id };
+                var result=mm.RetrieveById(movie);
                 if (result == null)
                 {
                     return NotFound("No se encontro la pelicula");
